@@ -1,0 +1,31 @@
+version: "3.0"
+services:
+  elasticsearch:
+    container_name: es-container-secure
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+    environment:
+      - xpack.security.enabled=true
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - ELASTIC_PASSWORD=Jazeqpro66!
+    networks:
+      - es-net-secure
+    ports:
+      - 9200:9200  
+  kibana:
+    container_name: kb-container-secure
+    image: docker.elastic.co/kibana/kibana:7.14.0
+    environment:
+      - ELASTICSEARCH_HOSTS=http://es-container-secure:9200
+      - ELASTIC_USERNAME=elastic
+      - ELASTIC_PASSWORD=Jazeqpro66!
+      - xpack.security.enabled=true
+    networks:
+      - es-net-secure
+    depends_on:
+      - elasticsearch
+    ports:
+      - 5601:5601
+networks:
+  es-net-secure:
+    driver: bridge
