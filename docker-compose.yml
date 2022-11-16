@@ -2,30 +2,33 @@ version: "3.0"
 services:
   elasticsearch:
     container_name: es-container-secure
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.5.0
     environment:
       - xpack.security.enabled=true
       - "discovery.type=single-node"
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
       - ELASTIC_PASSWORD=Jazeqpro66!
+    volumes: ['data8_http01:/usr/share/elasticsearch/data','data8_e01:/usr/share/elasticsearch']
     networks:
       - es-net-secure
     ports:
       - 9200:9200  
   kibana:
     container_name: kb-container-secure
-    image: docker.elastic.co/kibana/kibana:7.14.0
+    image: docker.elastic.co/kibana/kibana:8.5.0
     environment:
-      - ELASTICSEARCH_HOSTS=http://es-container-secure:9200
-      - ELASTIC_USERNAME=elastic
-      - ELASTIC_PASSWORD=Jazeqpro66!
-      - xpack.security.enabled=true
+      ELASTICSEARCH_HOSTS: "http://es-container-secure:9200"
+      ELASTICSEARCH_USERNAME: "kibana_system"
+      ELASTICSEARCH_PASSWORD: "gqqRJOZ9KRcm*zO8H7CA"
+      XPACK_SECURITY_ENABLED: "true"
+    volumes: ['data8_k:/usr/share/kibana']
     networks:
       - es-net-secure
     depends_on:
       - elasticsearch
     ports:
       - 5601:5601
+volumes: {"data8_http01","data8_k","data8_e01"}
 networks:
   es-net-secure:
     driver: bridge
